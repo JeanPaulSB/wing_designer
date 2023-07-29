@@ -7,7 +7,8 @@ Letting you to start working with naca airfoils quickly and precisely.
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
 
 ### Prerequisites
-![Static Badge](https://img.shields.io/badge/Python-blue?link=https%3A%2F%2Fwww.python.org%2F)
+![Static Badge](https://img.shields.io/badge/Python-blue?logo=python&logoColor=white&link=https%3A%2F%2Fwww.python.org%2F)
+
 
 
 What things you need to install the software and how to install them
