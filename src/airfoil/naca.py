@@ -88,11 +88,7 @@ class Naca:
 
 
 
-    # thickness distribution
-    # mean camber line
-    # camber slope
-
-        # for 5 digits
+   
     # identifies the corresponding naca family
     def set_type(self):
         
@@ -115,10 +111,10 @@ class Naca:
 
     
 
-    def __str__(self) -> str:
+    def summary(self):
 
         if self.family == 5:
-            return f"""
+            print(f"""
                 {self.family} digits NACA
                 chord: {self.chord}
                 maximum camber: {self.maximum_camber}
@@ -126,9 +122,9 @@ class Naca:
                 design lift coefficient: {self.design_cl}
                 points: {self.points}
 
-                """
+                """)
         elif self.family == 4:
-            return f"""
+            print(f"""
                 {self.family} digits NACA
                 chord: {self.chord}
                 maximum camber: {self.maximum_camber}
@@ -139,13 +135,9 @@ class Naca:
 
 
                 """
+                )
             
 
 
-jean = Naca("2432",5,200)
-
-print(jean)
-jean.plot()
-jean.export()
 
 
