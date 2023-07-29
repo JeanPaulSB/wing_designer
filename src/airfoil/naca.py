@@ -56,7 +56,7 @@ class Naca:
             plt.ylabel("y")
             plt.plot(xu, yu, 'b--',label = "airfoil surface")
             plt.plot(xl, yl, 'b--')
-            print(plt.legend)
+         
             plt.xlim(0,self.chord )
             plt.ylim(-self.thickness * 1.5,self.thickness * 1.5)
 
@@ -116,22 +116,22 @@ class Naca:
 
         if self.family == 5:
             print(f"""
-                {self.family} digits NACA {self.digits}
-                chord: {self.chord}
-                maximum camber: {self.maximum_camber}
-                thickness: {self.thickness}
-                design lift coefficient: {self.design_cl}
-                points: {self.points}
+            {self.family} digits NACA {self.digits}
+            chord: {self.chord}
+            maximum camber: {self.maximum_camber}
+            thickness: {self.thickness}
+            design lift coefficient: {self.design_cl}
+            points: {self.points}
 
                 """)
         elif self.family == 4:
             print(f"""
-                {self.family} digits NACA {self.digits}
-                chord: {self.chord}
-                maximum camber: {self.maximum_camber}
-                thickness: {self.thickness}
-                camber location: {self.thickness}
-                points: {self.points}
+            {self.family} digits NACA {self.digits}
+            chord: {self.chord}
+            maximum camber: {self.maximum_camber}
+            thickness: {self.thickness}
+            camber location: {self.thickness}
+            points: {self.points}
 
 
 

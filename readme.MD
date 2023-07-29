@@ -14,15 +14,13 @@ the constructor expects the following parameters:
 
 - digit designation as a string
 - chord as an integer or float
-- number of points to describe te profile as an integer
+- number of points to describe the profile as an integer
 
 once the airfoil have been instanciated, try on these methods:
 
 - plot(): shows you the plot of the file.
 - export(): creates a .csv file in the output folder with the name of the airfoil.
 - summary(): prints out the most important details of the profile.
-
-**a few more methods will be added in future versions.**
 
 ```
 # instanciating a naca airfoil
@@ -32,6 +30,8 @@ my_airfoil.plot()
 my_airfoil.export()
 my_airfoil.summary()
 ```
+
+**a few more methods will be added in future versions.**
 
 ### Sample outputs
 
