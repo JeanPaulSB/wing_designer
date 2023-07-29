@@ -1,6 +1,6 @@
-# Project Title
+# NACA airfoil generator ![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
 
-One Paragraph of project description goes here
+Letting you to start working with naca airfoils quickly and precisely.
 
 ## Getting Started
 
