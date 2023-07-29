@@ -4,17 +4,48 @@ Letting you to start working with naca airfoils quickly and precisely.
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+To start running the program is quite easy, remember that the structure as presented, airfoil is a python package that contains the corresponding tools.
 
-### Prerequisites
-![Static Badge](https://img.shields.io/badge/Python-blue?logo=python&logoColor=white&link=https%3A%2F%2Fwww.python.org%2F)
+_Once all the required libraries are installed_, go to "main.py" file.
 
+### Example
 
+the constructor expects the following parameters:
 
+- digit designation as a string
+- chord as an integer or float
+- number of points to describe te profile as an integer
 
+once the airfoil have been instanciated, try on these methods:
+
+- plot(): shows you the plot of the file.
+- export(): creates a .csv file in the output folder with the name of the airfoil.
+- summary(): prints out the most important details of the profile.
+
+**a few more methods will be added in future versions.**
 
 ```
-Give examples
+# instanciating a naca airfoil
+from airfoil import Naca
+my_airfoil = Naca("2412",5,50)
+my_airfoil.plot()
+my_airfoil.export()
+my_airfoil.summary()
+```
+
+### Sample outputs
+
+<img src="https://i.imgur.com/eBbF9up.png" width="500"><br>
+<img src="https://i.imgur.com/khXyXJK.png" width="200">
+
+### Prerequisites
+
+![Static Badge](https://img.shields.io/badge/Python-blue?logo=python&logoColor=white&link=https%3A%2F%2Fwww.python.org%2F)
+
+install all the required libraries by using
+
+```
+pip install -r requirements.txt
 ```
 
 ### Installing
@@ -55,36 +86,19 @@ Explain what these tests test and why
 Give an example
 ```
 
-## Deployment
-
-Add additional notes about how to deploy this on a live system
-
 ## Built With
 
-* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
-* [Maven](https://maven.apache.org/) - Dependency Management
-* [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
+- [Python](http://www.dropwizard.io/1.0.2/docs/)
+
+## What's next for the project
+
+- Implementing a GUI.
+- Making the project capable of computing lift,drag and moment coefficient using the correspoding theoretical model in Aerodynamics.
 
 ## Contributing
 
 Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
 
-## Versioning
+## Author
 
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags). 
-
-## Authors
-
-* **Billie Thompson** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
-
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
-
-## Acknowledgments
-
-* Hat tip to anyone whose code was used
-* Inspiration
-* etc
+- **Jean Paul Sierra**

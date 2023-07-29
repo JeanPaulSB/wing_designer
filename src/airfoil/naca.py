@@ -37,8 +37,8 @@ class Naca:
 
             theta = np.arctan(dyc)
 
-            plt.plot(x,yt)
-            plt.plot(x,yc)
+            plt.plot(x,yt,'-.y',label = "thickness distribution")
+            plt.plot(x,yc,'-r',label = "mean camber line")
 
             xu = x - yt * np.sin(theta)
             xl = x + yt * np.sin(theta)
@@ -50,17 +50,18 @@ class Naca:
             self.x_coordinates = (xl,xu)
 
             self.y_coordinates = (yl,yu)
-
-
-
-            plt.plot(xu,yu)
-            plt.plot(xl,yl)
-
+           
+            plt.title(f"NACA {self.digits}")
+            plt.xlabel("x")
+            plt.ylabel("y")
+            plt.plot(xu, yu, 'b--',label = "airfoil surface")
+            plt.plot(xl, yl, 'b--')
+            print(plt.legend)
             plt.xlim(0,self.chord )
             plt.ylim(-self.thickness * 1.5,self.thickness * 1.5)
 
            
-            
+            plt.legend()
             plt.show()
     
     def thickness_distribution(self,x):
@@ -115,7 +116,7 @@ class Naca:
 
         if self.family == 5:
             print(f"""
-                {self.family} digits NACA
+                {self.family} digits NACA {self.digits}
                 chord: {self.chord}
                 maximum camber: {self.maximum_camber}
                 thickness: {self.thickness}
@@ -125,7 +126,7 @@ class Naca:
                 """)
         elif self.family == 4:
             print(f"""
-                {self.family} digits NACA
+                {self.family} digits NACA {self.digits}
                 chord: {self.chord}
                 maximum camber: {self.maximum_camber}
                 thickness: {self.thickness}
