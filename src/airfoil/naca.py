@@ -31,38 +31,53 @@ class Naca:
 
             yt = np.array(list(map(self.thickness_distribution,x)))
 
-            yc = np.array(list(map(self.camber_line,x)))
 
-            dyc = np.array(list(map(self.camber_slope,x)))
-
-            theta = np.arctan(dyc)
-
-            plt.plot(x,yt,'-.y',label = "thickness distribution")
-            plt.plot(x,yc,'-r',label = "mean camber line")
-
-            xu = x - yt * np.sin(theta)
-            xl = x + yt * np.sin(theta)
-
-            yl = yc - yt * np.cos(theta)
-            yu = yc + yt * np.cos(theta)
-
-
-            self.x_coordinates = (xl,xu)
-
-            self.y_coordinates = (yl,yu)
-           
             plt.title(f"NACA {self.digits}")
             plt.xlabel("x")
             plt.ylabel("y")
-            plt.plot(xu, yu, 'b--',label = "airfoil surface")
-            plt.plot(xl, yl, 'b--')
-         
             plt.xlim(0,self.chord )
             plt.ylim(-self.thickness * 1.5,self.thickness * 1.5)
 
+
+            if self.symmetrical:
+                plt.plot(x,yt,'b--',label = "airfoil surface")
+                plt.plot(x,-yt,'b--')
+                self.x_coordinates = (x,x)
+                self.y_coordinates = (yt,-yt)
+                
+            if self.symmetrical == False:
+                yc = np.array(list(map(self.camber_line,x)))
+
+                dyc = np.array(list(map(self.camber_slope,x)))
+
+                theta = np.arctan(dyc)
+
+                plt.plot(x,yt,'-.y',label = "thickness distribution")
+                plt.plot(x,yc,'-r',label = "mean camber line")
+
+                xu = x - yt * np.sin(theta)
+                xl = x + yt * np.sin(theta)
+
+                yl = yc - yt * np.cos(theta)
+                yu = yc + yt * np.cos(theta)
+
+
+                self.x_coordinates = (xl,xu)
+
+                self.y_coordinates = (yl,yu)
+            
+                
+                
+                plt.plot(xu, yu, 'b--',label = "airfoil surface")
+                plt.plot(xl, yl, 'b--')
+            
            
+
+            
             plt.legend()
             plt.show()
+        if self.family == 5:
+            pass
     
     def thickness_distribution(self,x):
         term1 =  0.2969 * (np.sqrt(x/self.chord))
@@ -99,6 +114,13 @@ class Naca:
             self.maximum_camber = (int(self.digits[0]) / 100 ) 
             self.camber_location = (int(self.digits[1])/10) 
             self.thickness = (int(self.digits[2:])/ 100) 
+
+
+      
+
+            if self.maximum_camber == 0.0 and self.camber_location == 0.0:
+             
+                self.symmetrical =  True
             
 
 
