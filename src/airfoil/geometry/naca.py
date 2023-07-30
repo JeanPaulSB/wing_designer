@@ -16,13 +16,14 @@ class Naca:
     
 
     def export(self):
-        filename = "src/output/"+ "NACA " + str(self.digits) +".csv"
+        filename = "src/airfoil/geometry/output/"+ "NACA " + str(self.digits) +".csv"
         print("Saving txt file with all the coordinates")
         with open(filename,"w") as outputfile:
             for x,y in zip(self.x_coordinates[0][::-1],self.y_coordinates[0][::-1]):
                 print(f"{x},{y}",file = outputfile)     
             for x,y in zip(self.x_coordinates[1][1::],self.y_coordinates[1][1::]):
                 print(f"{x},{y}",file = outputfile) 
+                
     # source: https://archive.aoe.vt.edu/mason/Mason_f/CAtxtAppA.pdf
     def plot(self):
         if self.family == 4:

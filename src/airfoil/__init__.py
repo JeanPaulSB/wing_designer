@@ -1,1 +1,1 @@
-from .naca import Naca
+from .geometry.naca import Naca
