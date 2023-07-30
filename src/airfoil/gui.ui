@@ -46,42 +46,42 @@
      </property>
      <layout class="QFormLayout" name="formLayout">
       <item row="0" column="0">
-       <widget class="QLabel" name="label">
+       <widget class="QLabel" name="nacalabel">
         <property name="text">
          <string>Naca</string>
         </property>
        </widget>
       </item>
       <item row="0" column="1">
-       <widget class="QLineEdit" name="lineEdit">
+       <widget class="QLineEdit" name="nacaInput">
         <property name="styleSheet">
          <string notr="true">background-color: rgb(255, 255, 255);</string>
         </property>
        </widget>
       </item>
       <item row="1" column="0">
-       <widget class="QLabel" name="label_2">
+       <widget class="QLabel" name="chordlabel">
         <property name="text">
          <string>Chord</string>
         </property>
        </widget>
       </item>
       <item row="1" column="1">
-       <widget class="QLineEdit" name="lineEdit_2">
+       <widget class="QLineEdit" name="chordInput">
         <property name="styleSheet">
          <string notr="true">background-color: rgb(255, 255, 255);</string>
         </property>
        </widget>
       </item>
       <item row="2" column="0">
-       <widget class="QLabel" name="label_3">
+       <widget class="QLabel" name="pointslabel">
         <property name="text">
          <string>Points</string>
         </property>
        </widget>
       </item>
       <item row="2" column="1">
-       <widget class="QLineEdit" name="lineEdit_3">
+       <widget class="QLineEdit" name="pointsInput">
         <property name="styleSheet">
          <string notr="true">background-color: rgb(255, 255, 255);</string>
         </property>
@@ -89,7 +89,7 @@
       </item>
      </layout>
     </widget>
-    <widget class="QTableWidget" name="tableWidget">
+    <widget class="QTableWidget" name="coordinatesTable">
      <property name="geometry">
       <rect>
        <x>20</x>
@@ -1130,7 +1130,7 @@
      </property>
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
-       <widget class="QPushButton" name="pushButton">
+       <widget class="QPushButton" name="plotButton">
         <property name="styleSheet">
          <string notr="true">background-color: rgb(51, 102, 255);
 border-radius: 5px;
@@ -1143,7 +1143,7 @@ color: white;
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButton_3">
+       <widget class="QPushButton" name="exportButton">
         <property name="styleSheet">
          <string notr="true">background-color: rgb(51, 102, 255);
 border-radius: 5px;
@@ -1156,7 +1156,7 @@ color: white;
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButton_2">
+       <widget class="QPushButton" name="summButton">
         <property name="styleSheet">
          <string notr="true">border-radius: 5px;
 background-color: rgb(51, 102, 255);
@@ -1169,29 +1169,44 @@ color: rgb(255, 255, 255);</string>
       </item>
      </layout>
     </widget>
+    <widget class="QLabel" name="label">
+     <property name="geometry">
+      <rect>
+       <x>70</x>
+       <y>10</y>
+       <width>67</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Menu</string>
+     </property>
+    </widget>
    </widget>
-   <widget class="QFrame" name="frame_2">
+   <widget class="DrawingWindow" name="widget" native="true">
     <property name="geometry">
      <rect>
-      <x>190</x>
-      <y>0</y>
-      <width>621</width>
-      <height>581</height>
+      <x>210</x>
+      <y>20</y>
+      <width>571</width>
+      <height>511</height>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgb(16, 38, 147);</string>
-    </property>
-    <property name="frameShape">
-     <enum>QFrame::StyledPanel</enum>
-    </property>
-    <property name="frameShadow">
-     <enum>QFrame::Raised</enum>
+     <string notr="true">background-color: rgb(246, 245, 244);</string>
     </property>
    </widget>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>DrawingWindow</class>
+   <extends>QWidget</extends>
+   <header>drawing</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

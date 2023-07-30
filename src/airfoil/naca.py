@@ -11,12 +11,17 @@ class Naca:
         self.points = points
         self.set_type()
 
+
         self.x_coordinates = ()
         self.y_coordinates = ()
+        
     
 
-    def export(self):
-        filename = "src/airfoil/geometry/output/"+ "NACA " + str(self.digits) +".csv"
+    def export(self,filename = None):
+        if not filename:
+            filename = str(self.digits) +".csv"
+        if filename:
+            print(filename)
         print("Saving txt file with all the coordinates")
         with open(filename,"w") as outputfile:
             for x,y in zip(self.x_coordinates[0][::-1],self.y_coordinates[0][::-1]):
@@ -25,42 +30,42 @@ class Naca:
                 print(f"{x},{y}",file = outputfile) 
                 
     # source: https://archive.aoe.vt.edu/mason/Mason_f/CAtxtAppA.pdf
-    def plot(self):
+    def compute(self):
         if self.family == 4:
             # generating x values
-            x = np.linspace(0,self.chord,self.points)
+            self.x = np.linspace(0,self.chord,self.points)
 
-            yt = np.array(list(map(self.thickness_distribution,x)))
+            self.yt = np.array(list(map(self.thickness_distribution,self.x)))
 
-
+            """
             plt.title(f"NACA {self.digits}")
             plt.xlabel("x")
             plt.ylabel("y")
             plt.xlim(0,self.chord )
             plt.ylim(-self.thickness * 1.5,self.thickness * 1.5)
+            """
 
 
             if self.symmetrical:
-                plt.plot(x,yt,'b--',label = "airfoil surface")
-                plt.plot(x,-yt,'b--')
-                self.x_coordinates = (x,x)
-                self.y_coordinates = (yt,-yt)
+                #plt.plot(x,yt,'b--',label = "airfoil surface")
+                #plt.plot(x,-yt,'b--')
+                self.x_coordinates = (self.x,self.x)
+                self.y_coordinates = (self.yt,-self.yt)
                 
             if self.symmetrical == False:
-                yc = np.array(list(map(self.camber_line,x)))
+                self.yc = np.array(list(map(self.camber_line,self.x)))
 
-                dyc = np.array(list(map(self.camber_slope,x)))
+                self.dyc = np.array(list(map(self.camber_slope,self.x)))
 
-                theta = np.arctan(dyc)
+                theta = np.arctan(self.dyc)
 
-                plt.plot(x,yt,'-.y',label = "thickness distribution")
-                plt.plot(x,yc,'-r',label = "mean camber line")
+               
 
-                xu = x - yt * np.sin(theta)
-                xl = x + yt * np.sin(theta)
+                xu = self.x - self.yt * np.sin(theta)
+                xl = self.x + self.yt * np.sin(theta)
 
-                yl = yc - yt * np.cos(theta)
-                yu = yc + yt * np.cos(theta)
+                yl = self.yc - self.yt * np.cos(theta)
+                yu = self.yc + self.yt * np.cos(theta)
 
 
                 self.x_coordinates = (xl,xu)
@@ -69,14 +74,14 @@ class Naca:
             
                 
                 
-                plt.plot(xu, yu, 'b--',label = "airfoil surface")
-                plt.plot(xl, yl, 'b--')
+                #plt.plot(xu, yu, 'b--',label = "airfoil surface")
+                #plt.plot(xl, yl, 'b--')
             
            
 
             
-            plt.legend()
-            plt.show()
+            #plt.legend()
+            #plt.show()
         if self.family == 5:
             pass
     
