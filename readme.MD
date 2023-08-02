@@ -10,9 +10,9 @@ _Once all the required libraries are installed_, go to "main.py" file.
 
 ### How to run it
 
+```
 Inside the airfoil folder, run the file "ui.py".
 Then fill the required data and press the button "Plot".
-
 ```
 
 **a few more methods will be added in future versions.**
@@ -98,4 +98,7 @@ Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c6
 ## Author
 
 - **Jean Paul Sierra**
+
+```
+
 ```
