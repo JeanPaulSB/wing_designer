@@ -1,6 +1,8 @@
 from typing import Union
+from scipy.integrate import simps
 import matplotlib.pyplot as plt
 import numpy as np
+
 
 class Naca:
     # four digits naca
@@ -37,18 +39,11 @@ class Naca:
 
             self.yt = np.array(list(map(self.thickness_distribution,self.x)))
 
-            """
-            plt.title(f"NACA {self.digits}")
-            plt.xlabel("x")
-            plt.ylabel("y")
-            plt.xlim(0,self.chord )
-            plt.ylim(-self.thickness * 1.5,self.thickness * 1.5)
-            """
+         
 
 
             if self.symmetrical:
-                #plt.plot(x,yt,'b--',label = "airfoil surface")
-                #plt.plot(x,-yt,'b--')
+
                 self.x_coordinates = (self.x,self.x)
                 self.y_coordinates = (self.yt,-self.yt)
                 
@@ -72,16 +67,6 @@ class Naca:
 
                 self.y_coordinates = (yl,yu)
             
-                
-                
-                #plt.plot(xu, yu, 'b--',label = "airfoil surface")
-                #plt.plot(xl, yl, 'b--')
-            
-           
-
-            
-            #plt.legend()
-            #plt.show()
         if self.family == 5:
             pass
     
@@ -93,7 +78,27 @@ class Naca:
         term5 = -0.1015 * np.power(x/self.chord,4)
         return self.thickness / 0.2 *  (term1 + term2 + term3 + term4 + term5)
 
-    
+    def thin_airfoil_theory(self,alpha):
+        # computes the corresponding TaT analysis.
+
+        # variable change
+        change = lambda x: np.arcsin((2 * x / self.chord) + 1)
+
+        # putting slope in terms of that angle
+        if not self.symmetrical:
+            local_dyc = np.array(list(map(change,self.dyc)))
+
+            # finding location of max camber in theta
+            local_camber = np.arccos(2 * self.camber_location - 1)
+
+
+            A0 = alpha - 1 / np.pi * simps(self)
+
+
+
+
+
+
        
     def camber_line(self, x ):
         if x >= 0 and x <=  self.camber_location * self.chord:

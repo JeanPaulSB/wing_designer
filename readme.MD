@@ -8,32 +8,18 @@ To start running the program is quite easy, remember that the structure as prese
 
 _Once all the required libraries are installed_, go to "main.py" file.
 
-### Example
+### How to run it
 
-the constructor expects the following parameters:
+Inside the airfoil folder, run the file "ui.py".
+Then fill the required data and press the button "Plot".
 
-- digit designation as a string
-- chord as an integer or float
-- number of points to describe the profile as an integer
-
-once the airfoil have been instanciated, try on these methods:
-
-- plot(): shows you the plot of the file.
-- export(): creates a .csv file in the output folder with the name of the airfoil.
-- summary(): prints out the most important details of the profile.
-
-```
-# instanciating a naca airfoil
-from airfoil import Naca
-my_airfoil = Naca("2412",5,50)
-my_airfoil.plot()
-my_airfoil.export()
-my_airfoil.summary()
 ```
 
 **a few more methods will be added in future versions.**
 
 ### Sample outputs
+
+<img src="https://i.imgur.com/cuNHSXT.png" width="500"><br>
 
 <img src="https://i.imgur.com/eBbF9up.png" width="500"><br>
 <img src="https://i.imgur.com/khXyXJK.png" width="200">
@@ -45,7 +31,9 @@ my_airfoil.summary()
 install all the required libraries by using
 
 ```
+
 pip install -r requirements.txt
+
 ```
 
 ### Installing
@@ -55,13 +43,17 @@ A step by step series of examples that tell you how to get a development env run
 Say what the step will be
 
 ```
+
 Give the example
+
 ```
 
 And repeat
 
 ```
+
 until finished
+
 ```
 
 End with an example of getting some data out of the system or using it for a little demo
@@ -75,7 +67,9 @@ Explain how to run the automated tests for this system
 Explain what these tests test and why
 
 ```
+
 Give an example
+
 ```
 
 ### And coding style tests
@@ -83,7 +77,9 @@ Give an example
 Explain what these tests test and why
 
 ```
+
 Give an example
+
 ```
 
 ## Built With
@@ -102,3 +98,4 @@ Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c6
 ## Author
 
 - **Jean Paul Sierra**
+```

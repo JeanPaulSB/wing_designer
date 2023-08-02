@@ -55,7 +55,8 @@
       <item row="0" column="1">
        <widget class="QLineEdit" name="nacaInput">
         <property name="styleSheet">
-         <string notr="true">background-color: rgb(255, 255, 255);</string>
+         <string notr="true">background-color: rgb(255, 255, 255);
+border-radius: 5px;</string>
         </property>
        </widget>
       </item>
@@ -69,7 +70,9 @@
       <item row="1" column="1">
        <widget class="QLineEdit" name="chordInput">
         <property name="styleSheet">
-         <string notr="true">background-color: rgb(255, 255, 255);</string>
+         <string notr="true">background-color: rgb(255, 255, 255);
+border-radius: 5px;
+</string>
         </property>
        </widget>
       </item>
@@ -83,7 +86,8 @@
       <item row="2" column="1">
        <widget class="QLineEdit" name="pointsInput">
         <property name="styleSheet">
-         <string notr="true">background-color: rgb(255, 255, 255);</string>
+         <string notr="true">background-color: rgb(255, 255, 255);
+border-radius: 5px;</string>
         </property>
        </widget>
       </item>
