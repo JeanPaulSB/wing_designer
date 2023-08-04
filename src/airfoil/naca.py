@@ -20,7 +20,9 @@ class Naca:
         self.y_coordinates = ()
        
         
-
+    """
+    Exports the airfoil coordinates in a csv file
+    """
     def export(self, filename=None):
         if not filename:
             filename = str(self.digits) + ".csv"
@@ -34,6 +36,11 @@ class Naca:
                 print(f"{x},{y}", file=outputfile)
 
     # source: https://archive.aoe.vt.edu/mason/Mason_f/CAtxtAppA.pdf
+    """
+    Performs the corresponding geometrical computations for the NACA airfoil
+    using the mean camber line, its slope and the thickness distribution whether the airfoil
+    is symmetrical or not.
+    """
     def compute(self):
         if self.family == 4:
             # generating x values
@@ -69,6 +76,7 @@ class Naca:
             # TODO: pending
             pass
 
+
     def thickness_distribution(self, x):
         term1 = 0.2969 * (np.sqrt(x / self.chord))
         term2 = -0.1260 * (x / self.chord)
@@ -96,8 +104,9 @@ class Naca:
                 self.camber = lambdify(x,self.camber_sym)
                 self.slope = lambdify(x,self.slope_sym)
                 
-
-    # identifies the corresponding naca family
+    """
+    Identifies the corresponding NACA parameters, its family and characterizes the airfoil
+    """
     def set_type(self):
         # four digit series
         if len(self.digits) == 4:
