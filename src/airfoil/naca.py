@@ -78,23 +78,7 @@ class Naca:
         term5 = -0.1015 * np.power(x/self.chord,4)
         return self.thickness / 0.2 *  (term1 + term2 + term3 + term4 + term5)
 
-    def thin_airfoil_theory(self,alpha):
-        # computes the corresponding TaT analysis.
-
-        # variable change
-        change = lambda x: np.arcsin((2 * x / self.chord) + 1)
-
-        # putting slope in terms of that angle
-        if not self.symmetrical:
-            local_dyc = np.array(list(map(change,self.dyc)))
-
-            # finding location of max camber in theta
-            local_camber = np.arccos(2 * self.camber_location - 1)
-
-
-            A0 = alpha - 1 / np.pi * simps(self)
-
-
+  
 
 
 
