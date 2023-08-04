@@ -1,7 +1,7 @@
 from typing import Union
 from scipy.integrate import quad
 from sympy.abc import x
-from sympy import Eq, Piecewise, GreaterThan
+from sympy import Eq, Piecewise, GreaterThan,lambdify
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -18,11 +18,8 @@ class Naca:
         self.set_type()
         self.x_coordinates = ()
         self.y_coordinates = ()
-        self.set_equations()
-
-        # array of two functions
-        self.camber = []
-        self.camber_slope = []
+       
+        
 
     def export(self, filename=None):
         if not filename:
@@ -41,7 +38,7 @@ class Naca:
         if self.family == 4:
             # generating x values
             self.x = np.linspace(0, self.chord, self.points)
-
+            self.set_equations()
             # computing thickness distribution
             self.yt = np.array(list(map(self.thickness_distribution, self.x)))
 
@@ -51,9 +48,9 @@ class Naca:
 
             if self.symmetrical == False:
                 # computing camber line
-                self.yc = np.array(list(map(self.camber_line, self.x)))
+                self.yc = self.camber(self.x)
                 # camber slope
-                self.dyc = np.array(list(map(self.camber_slope, self.x)))
+                self.dyc = self.slope(self.x)
 
                 theta = np.arctan(self.dyc)
 
@@ -80,80 +77,25 @@ class Naca:
         term5 = -0.1015 * np.power(x / self.chord, 4)
         return self.thickness / 0.2 * (term1 + term2 + term3 + term4 + term5)
 
-    def thin_airfoil_theory(self, alpha):
-        # computes the corresponding TaT analysis.
-
-        # variable change
-        change = lambda x: np.arcsin((2 * x / self.chord) + 1)
-
-        deg2rad = lambda x: x * np.pi / 180
-
-        # putting slope in terms of that angle
-        if not self.symmetrical:
-            A0 = deg2rad(alpha) - (1 / np.pi) * quad(self.camber_line, 0, np.pi)[0]
-            print(A0)
-
-        if self.symmetrical:
-            cl = lambda theta: 2 * np.pi * deg2rad(theta)
-
-            return cl
-
-    # defining a set of tuples that returns the corresponding function in terms of the position
+   
+    """
+    Set the corresponding equations for the mean camber line and its slope
+    """
     def set_equations(self):
         if self.family == 4:
             if not self.symmetrical:
-                camber_eq1 = (
-                    self.maximum_camber
-                    / (self.camber_location**2)
-                    * (
-                        (
-                            2 * self.camber_location * (x / self.chord)
-                            - (x / self.chord) ** 2
-                        )
-                    )
-                )
-
-                camber_eq2 = self.maximum_camber * (
-                    (1 - 2 * self.camber_location)
-                    + 2 * self.camber_location * (x / self.chord)
-                    - (x / self.chord) ** 2 / (1 - self.camber_location) ** 2
-                )
-
-    def camber_line(self, x):
-        if x >= 0 and x <= self.camber_location * self.chord:
-            return (
-                self.maximum_camber
-                / (self.camber_location**2)
-                * (
-                    (
-                        2 * self.camber_location * (x / self.chord)
-                        - (x / self.chord) ** 2
-                    )
-                )
-            )
-        else:
-            return (
-                self.maximum_camber
-                * (
-                    (1 - 2 * self.camber_location)
-                    + 2 * self.camber_location * (x / self.chord)
-                    - (x / self.chord) ** 2
-                )
-            ) / (1 - self.camber_location) ** 2
-
-    def camber_slope(self, x):
-        if x >= 0 and x <= self.camber_location * self.chord:
-            return (
-                (2.0 * self.maximum_camber)
-                / np.power(self.camber_location, 2)
-                * (self.camber_location - (x / self.chord))
-            )
-        else:
-            return (
-                (2.0 * self.maximum_camber)
-                / np.power(1 - self.camber_location, 2)
-                * (self.camber_location - (x / self.chord))
-            )
+                camber_eq1 = self.maximum_camber / (self.camber_location**2) * ( ( 2 * self.camber_location * (x/self.chord) - ( x / self.chord)**2))
+                camber_eq2 = self.maximum_camber* ((1 - 2 * self.camber_location)+ 2 * self.camber_location * (x / self.chord) - (x / self.chord) ** 2) / (1 - self.camber_location) ** 2
+                camber_slope_eq1 = 2 * self.maximum_camber / np.power(self.camber_location,2) * (self.camber_location - (x / self.chord))
+                camber_slope_eq2 = 2 * self.maximum_camber / np.power(1-self.camber_location,2) * (self.camber_location - (x / self.chord))
+                
+                self.camber_sym = Piecewise((camber_eq1, x <= self.chord * self.camber_location),(camber_eq2,x > self.chord * self.camber_location))
+                #self.camberslope = Piecewise((camber_slope_eq2,GreaterThan(x,self.camber_location * self.chord),camber_slope_eq1))
+                self.slope_sym = Piecewise((camber_slope_eq1, x <= self.chord * self.camber_location),(camber_slope_eq2,x > self.chord * self.camber_location))
+                
+                self.camber = lambdify(x,self.camber_sym)
+                self.slope = lambdify(x,self.slope_sym)
+                
 
     # identifies the corresponding naca family
     def set_type(self):
