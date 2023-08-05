@@ -1,7 +1,7 @@
 from typing import Union
-from scipy.integrate import quad
+from scipy.integrate import simps,trapz,cumtrapz
 from sympy.abc import x
-from sympy import Eq, Piecewise, GreaterThan,lambdify
+from sympy import Eq, Piecewise, GreaterThan,lambdify,cos,symbols,integrate,AccumBounds
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -98,12 +98,72 @@ class Naca:
                 camber_slope_eq2 = 2 * self.maximum_camber / np.power(1-self.camber_location,2) * (self.camber_location - (x / self.chord))
                 
                 self.camber_sym = Piecewise((camber_eq1, x <= self.chord * self.camber_location),(camber_eq2,x > self.chord * self.camber_location))
-                #self.camberslope = Piecewise((camber_slope_eq2,GreaterThan(x,self.camber_location * self.chord),camber_slope_eq1))
                 self.slope_sym = Piecewise((camber_slope_eq1, x <= self.chord * self.camber_location),(camber_slope_eq2,x > self.chord * self.camber_location))
                 
                 self.camber = lambdify(x,self.camber_sym)
                 self.slope = lambdify(x,self.slope_sym)
                 
+                
+
+    def thinAirfoilTheory(self,interval: tuple):
+        # creating the theta symbol
+        theta = symbols("theta")
+        # making the corresponding change of variable
+        self.camber_sym = self.camber_sym.subs(x,self.chord / 2 * (1 - cos(theta)))
+        self.slope_sym = self.slope_sym.subs(x,self.chord / 2 * (1- cos(theta)))
+
+
+
+
+        location_maximum_camber = np.arccos(abs(self.camber_location * 2  - 1 ))
+
+    
+        A0 = lambda alpha: alpha  - ( integrate(self.slope_sym,(theta,0,np.pi)) /(np.pi))
+        A1 = 2 / np.pi * (integrate(self.slope_sym * cos(theta),(theta,0,np.pi)))
+        A2 = 2 / np.pi * (integrate(self.slope_sym * cos(theta) * cos(theta),(theta,0,np.pi)))
+
+        # now computing cl
+
+        angles = np.linspace(self.deg2rad(interval[0]),self.deg2rad(interval[1]),20)
+
+
+        cl_list = np.array(list(map(lambda rad: 2 * np.pi*(A0(rad)+A1/2),angles)))
+
+        cm_ac = np.pi / 4 * (A2-A1)
+        print(cm_ac)
+
+         
+ 
+  
+      
+
+       
+        """
+        # x in terms of theta
+        theta_values = np.array(list(map(lambda x: np.arccos((2*x/self.chord) - 1),self.x)))
+        
+        derivative = self.slope_theta(theta_values)
+
+        plt.plot(theta_values,derivative)
+        print(trapz(derivative))
+        plt.show()
+        """
+        
+        
+   
+
+        """
+        print(A0)
+        A0 = lambdify(theta,A0)
+        
+        # f(b) - f(a) 
+        print( - A0(0) + A0(np.pi) )
+        """
+        
+
+
+
+    
     """
     Identifies the corresponding NACA parameters, its family and characterizes the airfoil
     """
@@ -125,6 +185,12 @@ class Naca:
             self.maximum_camber = int(self.digits[1:3]) / 200
             self.thickness = int(self.digits[-2:]) / 100
 
+
+    def deg2rad(self,deg):
+        # 180 ° -> pi rad
+        # x °
+        return deg * np.pi / 180
+    
     def summary(self):
         if self.family == 5:
             print(
