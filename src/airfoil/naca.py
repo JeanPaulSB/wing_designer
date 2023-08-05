@@ -75,7 +75,6 @@ class Naca:
         if self.family == 5:
             # TODO: pending
             pass
-<<<<<<< HEAD
     
     def thickness_distribution(self,x):
         term1 =  0.2969 * (np.sqrt(x/self.chord))
@@ -91,30 +90,6 @@ class Naca:
 
 
        
-    def camber_line(self, x ):
-        if x >= 0 and x <=  self.camber_location * self.chord:
-            return self.maximum_camber / (self.camber_location ** 2) * ((2 * self.camber_location * (x/self.chord) - (x/self.chord)**2))
-        else:
-            return  (self.maximum_camber * ((1 - 2 * self.camber_location) + 2 * self.camber_location * (x/self.chord) - (x/self.chord) ** 2)) / (1 - self.camber_location)**2
-
-    def camber_slope(self,x):
-        if x >=0 and x <=  self.camber_location * self.chord:
-            return (2.0 * self.maximum_camber) / np.power(self.camber_location,2) * (self.camber_location - (x / self.chord))
-        else:
-            return (2.0 * self.maximum_camber) / np.power(1-self.camber_location,2) * (self.camber_location - (x / self.chord))
-
-=======
->>>>>>> symbolic_features
-
-
-    def thickness_distribution(self, x):
-        term1 = 0.2969 * (np.sqrt(x / self.chord))
-        term2 = -0.1260 * (x / self.chord)
-        term3 = -0.3516 * np.power(x / self.chord, 2)
-        term4 = 0.2843 * np.power(x / self.chord, 3)
-        term5 = -0.1015 * np.power(x / self.chord, 4)
-        return self.thickness / 0.2 * (term1 + term2 + term3 + term4 + term5)
-
    
     """
     Set the corresponding equations for the mean camber line and its slope
