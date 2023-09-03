@@ -1,8 +1,7 @@
 from typing import Union
 
 from sympy.abc import x
-from sympy import Eq, Piecewise, GreaterThan,lambdify,cos,symbols,integrate,AccumBounds
-import matplotlib.pyplot as plt
+from sympy import Eq, Piecewise, GreaterThan,lambdify,cos,symbols,integrate,AccumBounds,simplify
 import numpy as np
 
 
@@ -126,12 +125,11 @@ class Naca:
                 self.camber = lambdify(x,self.camber_sym)
                 self.slope = lambdify(x,self.slope_sym)
 
-
                 if self.flapped:
                     # getting phi in radians
                     phi = np.arccos(2*self.flap_position-1)
                     
-                    self.flap_slope = -self.flap_angle
+                    self.flap_slope = -(self.flap_angle)
                    
 
 
@@ -149,13 +147,14 @@ class Naca:
                                                 (self.camber_eq2,(x > self.chord * self.camber_location) & (x < self.chord * self.flap_position))  ,
                                                 (flap_eq, (x >= self.chord * self.flap_position)))
                     
-                    self.slope_sym = Piecewise((self.camber_slope_eq1, x <= self.chord * self.camber_location),
-                                               (self.camber_slope_eq2,(x > self.chord * self.camber_location) & (x < self.chord * self.flap_position)),
-                                               (self.flap_slope,(x >= self.chord * self.flap_position)))
+                    self.slope_sym = Piecewise((self.camber_slope_eq1, (x >= 0 ) & (x <= self.chord * self.camber_location)),
+                                               (self.camber_slope_eq2,(x >= self.chord * self.camber_location) & (x < self.chord * self.flap_position)),
+                                               (self.deg2rad(self.flap_slope),(x >= self.chord * self.flap_position) & (x <= self.chord)))
                     
 
-                    self.camber = lambdify(x,self.camber_sym)
-                    self.slope = lambdify(x,self.slope_sym)
+            
+                self.camber = lambdify(x,self.camber_sym)
+                self.slope = lambdify(x,self.slope_sym)
                   
 
 
@@ -170,19 +169,25 @@ class Naca:
         # making the corresponding change of variable
 
         convertorad = lambda x: np.arccos(-2*x + 1) 
-        self.slope_sym = self.slope_sym.subs(x,self.chord / 2 * (1- cos(theta)))
+        
 
         if self.flapped:
             integral_limits = (
             convertorad(self.camber_location),
             convertorad(self.flap_position),
             np.pi )
-            return 0
+            print(integral_limits)
+            self.slope_sym = self.slope_sym.subs(x,self.chord / 2 * (1- cos(theta)))
+            aL_0 = - 1 / np.pi * integrate(self.slope_sym * (cos(theta) - 1 ),(theta,0,np.pi))
+            print(simplify(aL_0 * 180 / np.pi).evalf())
+
 
 
         else:
+            self.slope_sym = self.slope_sym.subs(x,self.chord / 2 * (1- cos(theta)))
+            print(self.slope_sym)
             aL_0 = - 1 / np.pi * integrate(self.slope_sym * (cos(theta) - 1 ),(theta,0,np.pi))
-            print(aL_0 )
+            print((aL_0 * 180 / np.pi))
 
         
         
