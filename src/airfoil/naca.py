@@ -1,5 +1,5 @@
 from typing import Union
-from scipy.integrate import simps,trapz,cumtrapz
+
 from sympy.abc import x
 from sympy import Eq, Piecewise, GreaterThan,lambdify,cos,symbols,integrate,AccumBounds
 import matplotlib.pyplot as plt
@@ -18,6 +18,9 @@ class Naca:
         self.set_type()
         self.x_coordinates = ()
         self.y_coordinates = ()
+        self.flapped = False
+        self.flap_angle = 0
+        self.flap_position = 0
        
         
     """
@@ -87,8 +90,15 @@ class Naca:
   
 
 
-
-
+    """
+    adds a flap to the airfoil
+    angle: deg
+    position: in percent of the cord   
+    """
+    def addFlap(self,angle:float,position: float):
+        self.flap_angle = angle
+        self.flap_position = position
+        self.flapped  = True
        
    
     """
@@ -97,74 +107,92 @@ class Naca:
     def set_equations(self):
         if self.family == 4:
             if not self.symmetrical:
-                camber_eq1 = self.maximum_camber / (self.camber_location**2) * ( ( 2 * self.camber_location * (x/self.chord) - ( x / self.chord)**2))
-                camber_eq2 = self.maximum_camber* ((1 - 2 * self.camber_location)+ 2 * self.camber_location * (x / self.chord) - (x / self.chord) ** 2) / (1 - self.camber_location) ** 2
-                camber_slope_eq1 = 2 * self.maximum_camber / np.power(self.camber_location,2) * (self.camber_location - (x / self.chord))
-                camber_slope_eq2 = 2 * self.maximum_camber / np.power(1-self.camber_location,2) * (self.camber_location - (x / self.chord))
+                self.camber_eq1 = self.maximum_camber / (self.camber_location**2) * ( ( 2 * self.camber_location * (x/self.chord) - ( x / self.chord)**2))
+                self.camber_eq2 = self.maximum_camber* ((1 - 2 * self.camber_location)+ 2 * self.camber_location * (x / self.chord) - (x / self.chord) ** 2) / (1 - self.camber_location) ** 2
+
+
+                self.camber_slope_eq1 = 2 * self.maximum_camber / np.power(self.camber_location,2) * (self.camber_location - (x / self.chord))
+                self.camber_slope_eq2 = 2 * self.maximum_camber / np.power(1-self.camber_location,2) * (self.camber_location - (x / self.chord))
+
+               
                 
-                self.camber_sym = Piecewise((camber_eq1, x <= self.chord * self.camber_location),(camber_eq2,x > self.chord * self.camber_location))
-                self.slope_sym = Piecewise((camber_slope_eq1, x <= self.chord * self.camber_location),(camber_slope_eq2,x > self.chord * self.camber_location))
+                self.camber_sym = Piecewise((self.camber_eq1, x <= self.chord * self.camber_location),
+                                            (self.camber_eq2,x > self.chord * self.camber_location))
+                
+                self.slope_sym = Piecewise((self.camber_slope_eq1, x <= self.chord * self.camber_location),
+                                           (self.camber_slope_eq2,x > self.chord * self.camber_location))
+
                 
                 self.camber = lambdify(x,self.camber_sym)
                 self.slope = lambdify(x,self.slope_sym)
+
+
+                if self.flapped:
+                    # getting phi in radians
+                    phi = np.arccos(2*self.flap_position-1)
+                    
+                    self.flap_slope = -self.flap_angle
+                   
+
+
+
+                    # defining graph for the flap eq
+                    # y = mx+b
+                    # b = y -mx
+                    
+                    b = self.camber(self.flap_position * self.chord) - self.flap_slope * (self.flap_position * self.chord) 
+                    flap_eq = self.flap_slope *  x + b
+
+
+                    #  now we have to redifine the the camber equations knowing the position of the flap and the same with the slope sym eq
+                    self.camber_sym = Piecewise((self.camber_eq1, x <= self.chord * self.camber_location),
+                                                (self.camber_eq2,(x > self.chord * self.camber_location) & (x < self.chord * self.flap_position))  ,
+                                                (flap_eq, (x >= self.chord * self.flap_position)))
+                    
+                    self.slope_sym = Piecewise((self.camber_slope_eq1, x <= self.chord * self.camber_location),
+                                               (self.camber_slope_eq2,(x > self.chord * self.camber_location) & (x < self.chord * self.flap_position)),
+                                               (self.flap_slope,(x >= self.chord * self.flap_position)))
+                    
+
+                    self.camber = lambdify(x,self.camber_sym)
+                    self.slope = lambdify(x,self.slope_sym)
+                  
+
+
+
+
                 
                 
 
-    def thinAirfoilTheory(self,interval: tuple):
+    def thinAirfoilTheory(self,alpha):
         # creating the theta symbol
         theta = symbols("theta")
         # making the corresponding change of variable
-        self.camber_sym = self.camber_sym.subs(x,self.chord / 2 * (1 - cos(theta)))
+
+        convertorad = lambda x: np.arccos(-2*x + 1) 
         self.slope_sym = self.slope_sym.subs(x,self.chord / 2 * (1- cos(theta)))
 
+        if self.flapped:
+            integral_limits = (
+            convertorad(self.camber_location),
+            convertorad(self.flap_position),
+            np.pi )
+            return 0
 
 
+        else:
+            aL_0 = - 1 / np.pi * integrate(self.slope_sym * (cos(theta) - 1 ),(theta,0,np.pi))
+            print(aL_0 )
 
-        location_maximum_camber = np.arccos(abs(self.camber_location * 2  - 1 ))
+        
+        
 
     
-        A0 = lambda alpha: alpha  - ( integrate(self.slope_sym,(theta,0,np.pi)) /(np.pi))
-        A1 = 2 / np.pi * (integrate(self.slope_sym * cos(theta),(theta,0,np.pi)))
-        A2 = 2 / np.pi * (integrate(self.slope_sym * cos(theta) * cos(theta),(theta,0,np.pi)))
-
-        # now computing cl
-
-        angles = np.linspace(self.deg2rad(interval[0]),self.deg2rad(interval[1]),20)
 
 
-        cl_list = np.array(list(map(lambda rad: 2 * np.pi*(A0(rad)+A1/2),angles)))
-
-        cm_ac = np.pi / 4 * (A2-A1)
-        print(cm_ac)
-
-         
- 
-  
       
 
-       
-        """
-        # x in terms of theta
-        theta_values = np.array(list(map(lambda x: np.arccos((2*x/self.chord) - 1),self.x)))
-        
-        derivative = self.slope_theta(theta_values)
 
-        plt.plot(theta_values,derivative)
-        print(trapz(derivative))
-        plt.show()
-        """
-        
-        
-   
-
-        """
-        print(A0)
-        A0 = lambdify(theta,A0)
-        
-        # f(b) - f(a) 
-        print( - A0(0) + A0(np.pi) )
-        """
-        
 
 
 
@@ -173,13 +201,14 @@ class Naca:
     Identifies the corresponding NACA parameters, its family and characterizes the airfoil
     """
     def set_type(self):
+
+
         # four digit series
         if len(self.digits) == 4:
             self.family = 4
             self.maximum_camber = int(self.digits[0]) / 100
             self.camber_location = int(self.digits[1]) / 10
             self.thickness = int(self.digits[2:]) / 100
-
             if self.maximum_camber == 0.0 and self.camber_location == 0.0:
                 self.symmetrical = True
 
@@ -191,35 +220,10 @@ class Naca:
             self.thickness = int(self.digits[-2:]) / 100
 
 
+
+
     def deg2rad(self,deg):
         # 180 ° -> pi rad
         # x °
         return deg * np.pi / 180
     
-    def summary(self):
-        if self.family == 5:
-            print(
-                f"""
-            {self.family} digits NACA {self.digits}
-            chord: {self.chord}
-            maximum camber: {self.maximum_camber}
-            thickness: {self.thickness}
-            design lift coefficient: {self.design_cl}
-            points: {self.points}
-
-                """
-            )
-        elif self.family == 4:
-            print(
-                f"""
-            {self.family} digits NACA {self.digits}
-            chord: {self.chord}
-            maximum camber: {self.maximum_camber}
-            thickness: {self.thickness}
-            camber location: {self.thickness}
-            points: {self.points}
-
-
-
-                """
-            )
