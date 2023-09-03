@@ -55,6 +55,11 @@ class Naca:
                 self.x_coordinates = (self.x, self.x)
                 self.y_coordinates = (self.yt, -self.yt)
 
+                # NOTE: symmetrical airfoils do not have camber, but when a flap its added, it creates a cambered section with the form
+                # of a straigth line from the position of the flap to the trailing edge.
+                if self.flapped:
+                    self.yc = self.camber(self.x)
+
             if self.symmetrical == False:
                 # computing camber line
                 self.yc = self.camber(self.x)
@@ -95,7 +100,7 @@ class Naca:
     position: in percent of the cord   
     """
     def addFlap(self,angle:float,position: float):
-        self.flap_angle = angle
+        self.flap_angle = self.deg2rad(angle)
         self.flap_position = position
         self.flapped  = True
        
@@ -106,38 +111,35 @@ class Naca:
     def set_equations(self):
         if self.family == 4:
             if not self.symmetrical:
+                # defining symbolic camber and camber slope equations
                 self.camber_eq1 = self.maximum_camber / (self.camber_location**2) * ( ( 2 * self.camber_location * (x/self.chord) - ( x / self.chord)**2))
                 self.camber_eq2 = self.maximum_camber* ((1 - 2 * self.camber_location)+ 2 * self.camber_location * (x / self.chord) - (x / self.chord) ** 2) / (1 - self.camber_location) ** 2
-
-
                 self.camber_slope_eq1 = 2 * self.maximum_camber / np.power(self.camber_location,2) * (self.camber_location - (x / self.chord))
                 self.camber_slope_eq2 = 2 * self.maximum_camber / np.power(1-self.camber_location,2) * (self.camber_location - (x / self.chord))
 
-               
-                
+
+                # integrating the previous equations into a piecewise function that describes the airfoil camber and its slope taking into account
+                # the position of the maximum camber
                 self.camber_sym = Piecewise((self.camber_eq1, x <= self.chord * self.camber_location),
                                             (self.camber_eq2,x > self.chord * self.camber_location))
                 
                 self.slope_sym = Piecewise((self.camber_slope_eq1, x <= self.chord * self.camber_location),
                                            (self.camber_slope_eq2,x > self.chord * self.camber_location))
 
-                
+                # making those symbolic equations actually evaluables
                 self.camber = lambdify(x,self.camber_sym)
                 self.slope = lambdify(x,self.slope_sym)
 
                 if self.flapped:
-                    # getting phi in radians
-                    phi = np.arccos(2*self.flap_position-1)
-                    
+                    # the slope it's actually negative 
                     self.flap_slope = -(self.flap_angle)
                    
 
 
 
-                    # defining graph for the flap eq
+                    # defining graph for the flap eq in order to intersect the corresponding camber line
                     # y = mx+b
                     # b = y -mx
-                    
                     b = self.camber(self.flap_position * self.chord) - self.flap_slope * (self.flap_position * self.chord) 
                     flap_eq = self.flap_slope *  x + b
 
@@ -146,16 +148,32 @@ class Naca:
                     self.camber_sym = Piecewise((self.camber_eq1, x <= self.chord * self.camber_location),
                                                 (self.camber_eq2,(x > self.chord * self.camber_location) & (x < self.chord * self.flap_position))  ,
                                                 (flap_eq, (x >= self.chord * self.flap_position)))
-                    
                     self.slope_sym = Piecewise((self.camber_slope_eq1, (x >= 0 ) & (x <= self.chord * self.camber_location)),
                                                (self.camber_slope_eq2,(x >= self.chord * self.camber_location) & (x < self.chord * self.flap_position)),
-                                               (self.deg2rad(self.flap_slope),(x >= self.chord * self.flap_position) & (x <= self.chord)))
+                                               (self.flap_slope,(x >= self.chord * self.flap_position) & (x <= self.chord)))
                     
+                    # repeating this step since our piecewise functions have been redefined with the addition of the high lift device
+                    self.camber = lambdify(x,self.camber_sym)
+                    self.slope = lambdify(x,self.slope_sym)
 
-            
-                self.camber = lambdify(x,self.camber_sym)
-                self.slope = lambdify(x,self.slope_sym)
-                  
+
+                
+
+            if self.symmetrical:
+                if self.flapped:
+                    # NOTE: this step is just an "extra" since the model for symmetrical airfoils do not require all these things.
+                    # we are finding the flap eq just to plot it but only the slope is necessary for the TaT computations.
+                    # we still need to find the incercept of the line with the y axis
+                    self.flap_slope = -(self.flap_angle)
+                    b = - self.flap_slope * self.chord * self.flap_position
+                    self.flap_eq = self.flap_slope * x + b
+
+                    # just redefining it
+                    self.camber_sym = Piecewise( (0, x <= self.chord * self.flap_position),
+                                       (self.flap_eq, x >= self.chord * self.flap_position))
+                    
+                    self.camber = lambdify(x,self.camber_sym)
+                    
 
 
 
@@ -171,28 +189,29 @@ class Naca:
         convertorad = lambda x: np.arccos(-2*x + 1) 
         
 
-        if self.flapped:
-            integral_limits = (
-            convertorad(self.camber_location),
-            convertorad(self.flap_position),
-            np.pi )
-            print(integral_limits)
-            self.slope_sym = self.slope_sym.subs(x,self.chord / 2 * (1- cos(theta)))
-            aL_0 = - 1 / np.pi * integrate(self.slope_sym * (cos(theta) - 1 ),(theta,0,np.pi))
-            print(simplify(aL_0 * 180 / np.pi).evalf())
+        if self.symmetrical != True:
+
+            if self.flapped:
+                # making the substitution in order to continue integrating
+                self.slope_sym = self.slope_sym.subs(x,self.chord / 2 * (1- cos(theta)))
+                # computing alpha @ L=0
+                aL_0 = - 1 / np.pi * integrate(self.slope_sym * (cos(theta) - 1 ),(theta,0,np.pi))
+                print(simplify(aL_0 * 180 / np.pi).evalf())
 
 
 
+            else:
+
+                self.slope_sym = self.slope_sym.subs(x,self.chord / 2 * (1- cos(theta)))
+                aL_0 = - 1 / np.pi * integrate(self.slope_sym * (cos(theta) - 1 ),(theta,0,np.pi))
         else:
-            self.slope_sym = self.slope_sym.subs(x,self.chord / 2 * (1- cos(theta)))
-            print(self.slope_sym)
-            aL_0 = - 1 / np.pi * integrate(self.slope_sym * (cos(theta) - 1 ),(theta,0,np.pi))
-            print((aL_0 * 180 / np.pi))
+            if self.flapped:
+                phi = np.arccos(-2*self.flap_position +1)
+                aL_0 = self.flap_slope * (1 - phi/ np.pi + np.sin(phi) / np.pi)
+            else:
+                aL_0 = 0
 
         
-        
-
-    
 
 
       
