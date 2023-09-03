@@ -60,6 +60,21 @@ class Naca:
                 if self.flapped:
                     self.yc = self.camber(self.x)
 
+                    self.dyc = self.slope(self.x)
+
+                    theta = np.arctan(self.dyc)
+
+                    xu = self.x - self.yt * np.sin(theta)
+                    xl = self.x + self.yt * np.sin(theta)
+
+                    yl = self.yc - self.yt * np.cos(theta)
+                    yu = self.yc + self.yt * np.cos(theta)
+
+                    self.x_coordinates = (xl, xu)
+
+                    self.y_coordinates = (yl, yu)
+
+
             if self.symmetrical == False:
                 # computing camber line
                 self.yc = self.camber(self.x)
@@ -172,7 +187,15 @@ class Naca:
                     self.camber_sym = Piecewise( (0, x <= self.chord * self.flap_position),
                                        (self.flap_eq, x >= self.chord * self.flap_position))
                     
+                    self.slope_sym = Piecewise(
+                        ( (0, x <= self.chord * self.flap_position)),
+                        (self.flap_slope, x >= self.chord * self.flap_position)
+                        )
+                    
+                    
                     self.camber = lambdify(x,self.camber_sym)
+                    self.slope = lambdify(x,self.slope_sym)
+                
                     
 
 
