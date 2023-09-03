@@ -2,10 +2,12 @@ import sys
 import typing
 import numpy as np
 import random
+
 from PyQt5 import QtCore, QtWidgets, uic
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QPainter, QColor, QFont, QPen
-from PyQt5.QtWidgets import QWidget, QFileDialog
+from PyQt5.QtGui import QPainter, QColor, QFont
+from PyQt5.QtWidgets import QWidget, QFileDialog,QDialog
+from createDialog import Ui_Dialog
 
 from naca import Naca
 
@@ -16,16 +18,28 @@ class Window(QtWidgets.QMainWindow):
         uic.loadUi("gui.ui", self)
         self.setWindowTitle("Airfoil generator")  #
 
-        self.plotButton.clicked.connect(self.validateInputs)
-        self.exportButton.clicked.connect(self.getFile)
+        self.actionEdit.triggered.connect(self.test)
 
+    
+
+    def test(self):
+        d = Ui_Dialog()
+        mydialog = QDialog()
+        d.setupUi(mydialog)
+        mydialog.exec()
+      
+        
+      
+
+        print("test")
+    """
     def validateInputs(self):
         naca = self.nacaInput
         chord = self.chordInput
         points = self.pointsInput
 
         nacaisValid = False
-        chordisValid = False
+        chordisValid = Fals
         pointsisValid = False
 
         if naca.text() != "":
@@ -69,7 +83,7 @@ class Window(QtWidgets.QMainWindow):
                 options=options,
             )
             self.widget.airfoil.export(filename[0])
-
+    """
 
 app = QtWidgets.QApplication(sys.argv)
 # se crea la instancia de la ventana
