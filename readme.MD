@@ -9,7 +9,7 @@ through my email.
     - Simple Airfoil
       - Naca(4,5) digits
       - Custom airfoil
-    - Flapped Airfoil (plan flap)
+    - Flapped Airfoil (plain flap)
       - Naca(4,5) digits
       - Custom airfoil
   - Wings
