@@ -1,16 +1,17 @@
 from naca import Naca
 import matplotlib.pyplot as plt
 import numpy as np
-profile = Naca("0012",0.43,1000)
+import pandas as pd
 
-profile.addFlap(55,0.75)
+profile = Naca("2408", 1, 1000)
+
+
 profile.set_equations()
 profile.compute()
-profile.thinAirfoilTheory(0)
-
-
-
-plt.plot(profile.x_coordinates[0],profile.y_coordinates[0],'b--',label = "airfoil surface")
-plt.plot(profile.x_coordinates[1],profile.y_coordinates[1],'b--')
-plt.plot(profile.x_coordinates[1],profile.camber(profile.x),'b--')
-plt.show()
+df = pd.DataFrame(
+    {
+        "Alpha (deg)": profile.thinAirfoilTheory((-2, 10))[0],
+        "Cl": profile.thinAirfoilTheory((-2, 10))[1],
+    }
+)
+print(df)
