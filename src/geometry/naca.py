@@ -21,8 +21,67 @@ class Naca(Airfoil):
 
         self.characterize()
 
+    """
+    Sets the following parameters:
+    x: list of x values from 0 to c
+    yt: thickness distribution
+    yc: camber
+    dyc: camber slope
+    """
+
     def compute(self):
-        pass
+        if self.family == 4:
+            # generating x values
+            self.x = np.linspace(0, self.chord, self.points)
+            self.set_equations()
+            # computing thickness distribution
+            self.yt = np.array(list(map(self.thickness_distribution, self.x)))
+
+            if self.symmetrical:
+                self.x_coordinates = (self.x, self.x)
+                self.y_coordinates = (self.yt, -self.yt)
+
+                # NOTE: symmetrical airfoils do not have camber, but when a flap its added, it creates a cambered section with the form
+                # of a straigth line from the position of the hing point of the flap to the trailing edge.
+                if self.flapped:
+                    self.yc = self.camber(self.x)
+
+                    self.dyc = self.slope(self.x)
+
+                    theta = np.arctan(self.dyc)
+
+                    xu = self.x - self.yt * np.sin(theta)
+                    xl = self.x + self.yt * np.sin(theta)
+
+                    yl = self.yc - self.yt * np.cos(theta)
+                    yu = self.yc + self.yt * np.cos(theta)
+
+                    self.x_coordinates = (xl, xu)
+
+                    self.y_coordinates = (yl, yu)
+
+            if self.symmetrical == False:
+                # computing camber line
+                self.yc = self.camber(self.x)
+                # camber slope
+                self.dyc = self.slope(self.x)
+
+                theta = np.arctan(self.dyc)
+
+                # airfoil surface coordinates
+                xu = self.x - self.yt * np.sin(theta)
+                xl = self.x + self.yt * np.sin(theta)
+
+                yl = self.yc - self.yt * np.cos(theta)
+                yu = self.yc + self.yt * np.cos(theta)
+
+                self.x_coordinates = (xl, xu)
+
+                self.y_coordinates = (yl, yu)
+
+        if self.family == 5:
+            # TODO: pending
+            pass
 
     """
     Returns the thickness distribution y(t) at a specific point
