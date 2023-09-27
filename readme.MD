@@ -1,6 +1,22 @@
-# NACA airfoil generator ![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
+# Wing Designer ![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
 
-Letting you to start working with naca airfoils quickly and precisely.
+Wing Designer is a project that help you to analyze the aerodynamical performance of bodies, such as wings, airfoils and so on.
+It is built in the top of Python. The project is still in development, If you'd like to contribute, let me a message
+through my email.
+
+# Features
+  - Airfoils 
+    - Simple Airfoil
+      - Naca(4,5) digits
+      - Custom airfoil
+    - Flapped Airfoil (plan flap)
+      - Naca(4,5) digits
+      - Custom airfoil
+  - Wings
+    - any geometry
+  - Physical Models
+    - Thin Airfoil Theory
+    - Lifting Line Theory
 
 ## Getting Started
 
