@@ -31,7 +31,7 @@ Geometry currently implements definitions for:
 - Custom Airfoil
 - Naca 
 
-Models currently implements:
+Models currently implemented:
 - Thin Airfoil Theory:
   Mathematical model that replaces the mean camberline of a given airfoil for a vortex sheet, under that abstraction it is possible to estimate the aerodynamical perfomance of an airfoil assuming that the flow is inviscid (still being a reasonable aproximation and it states good results)
 - Lifting Line Theory:
