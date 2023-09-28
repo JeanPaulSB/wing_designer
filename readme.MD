@@ -51,7 +51,7 @@ could use it to work with it.
 
 Reading classes and docs definition may ligth your perspective of the scope of each object,geometry or model.
 
-### Case 1: Let's suppose that you'd like to estimate the Cl for a NACA 2412 airfoil.
+### Case 1: Let's suppose that you'd like to estimate the Cl for a NACA 2412 airfoil flapped and unflapped.
 The strategy would be as simple as, create a Naca object, passing parameters such as NACA digits, chord and number of points for its definition.
 Then, you just have to call the model ThinAirfoilTheory and apply it to your airfoil.
 What matters to this result is the aL_0 ($\alpha_{L=0}$) of your airfoil, since TaT predicts that regardless the airfoil shape, the lift slopte would be the same.
