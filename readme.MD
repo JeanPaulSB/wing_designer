@@ -59,6 +59,18 @@ Now you can just extract the aL_0 from your airfoil and use it considering that 
 
 Let's traduce that to code.
 
+```python
+from geometry import Naca
+from models import ThinAirfoilTheory
+import numpy as np
+
+airfoil = Naca("2412",15,50) # NACA 2412, 15m of chord and 50 points for its definition.
+ThinAirfoilTheory.solve(airfoil)
+# cl @ 5deg
+cl = 2*np.pi*(np.deg2rad(5) - airfoil.aL_0)
+
+```
+
 
 ### Sample outputs
 
