@@ -22,7 +22,7 @@ through my email.
 
 ### Overall architecture
 The tools inside the project are organized as python packages, the availables until now are
-- Geometry (pretty self explanatory, it contains python object definitions for object such as airfoils, wings, and surfaces)
+- Geometry (pretty self explanatory, it contains python object definitions for objects such as airfoils, wings, and surfaces)
 - Models (it packages all the solvers that implements the mathematical and physical background required to estimate the aerodynamical performance of the specified geometry)
 
 
@@ -30,6 +30,16 @@ Geometry currently implements definitions for:
 - Airfoil
 - Custom Airfoil
 - Naca 
+
+Models currently implements:
+- Thin Airfoil Theory:
+  Mathematical model that replaces the mean camberline of a given airfoil for a vortex sheet, under that abstraction it is possible to estimate the aerodynamical perfomance of an airfoil assuming that the flow is inviscid (still being a reasonable aproximation and it states good results)
+- Lifting Line Theory:
+This models deals with the wing finite representation in contrast to the Thin Airfoil Theory, with treats the Airfoil as an infinite wing, it is important to analyze the differences between those two behaviors:
+A finite wing inmersed in a flow vs An infinite wing in the some condition. It uses a collection of horseshoe vortex along the span of the wing and it is able to compute the aerodynamical performance of an actual wing with the considerations of its vorticity and the corresponding induced drag due to that.
+> [!NOTE]  
+> Infinite wing actually means that the span of the airfoil is 1.
+
 > [!NOTE]  
 > In the future, more geometry definitions will be added.
 
