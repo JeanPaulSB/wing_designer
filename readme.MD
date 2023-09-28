@@ -54,7 +54,7 @@ Reading classes and docs definition may ligth your perspective of the scope of e
 ### Case 1: Let's suppose that you'd like to estimate the Cl for a NACA 2412 airfoil.
 The strategy would be as simple as, create a Naca object, passing parameters such as NACA digits, chord and number of points for its definition.
 Then, you just have to call the model ThinAirfoilTheory and apply it to your airfoil.
-What matters to this result is the aL_0 of your airfoil, since TaT predicts that regardless the airfoil shape, the lift slopte would be the same.
+What matters to this result is the aL_0 ($\alpha_{L=0}$) of your airfoil, since TaT predicts that regardless the airfoil shape, the lift slopte would be the same.
 Now you can just extract the aL_0 from your airfoil and use it considering that $C_l = 2\pi(\alpha-\alpha_{L=0})$
 
 Let's traduce that to code.
