@@ -55,7 +55,7 @@ Reading classes and docs definition may ligth your perspective of the scope of e
 The strategy would be as simple as, create a Naca object, passing parameters such as NACA digits, chord and number of points for its definition.
 Then, you just have to call the model ThinAirfoilTheory and apply it to your airfoil.
 What matters to this result is the aL_0 of your airfoil, since TaT predicts that regardless the airfoil shape, the lift slopte would be the same.
-Now you can just extract the aL_0 from your airfoil and use it considering that $Cl = {2\pi *(alpha-aL_0)}.
+Now you can just extract the aL_0 from your airfoil and use it considering that $C_l = 2\pi(\alpha-\alpha_{L=0})$
 
 Let's traduce that to code.
 
@@ -65,6 +65,23 @@ from models import ThinAirfoilTheory
 import numpy as np
 
 airfoil = Naca("2412",15,50) # NACA 2412, 15m of chord and 50 points for its definition.
+ThinAirfoilTheory.solve(airfoil)
+# cl @ 5deg
+cl = 2*np.pi*(np.deg2rad(5) - airfoil.aL_0)
+
+```
+
+Suppose that you'd like to add a plain flap to the airfoil at 85% of its chord with a deflection of 20° deg.
+The solution is exactly the same as the previous example, the extra step its just calling the corresponding method in order to add
+the flap to the airfoil while specifying its position with respect to x/c and its defelection.
+
+```python
+from geometry import Naca
+from models import ThinAirfoilTheory
+import numpy as np
+
+airfoil = Naca("2412",15,50) # NACA 2412, 15m of chord and 50 points for its definition.
+airfoil.addFlap(20,0.85) # extra step, adding a flap with 20°deg of deflection at 85% of the chord.
 ThinAirfoilTheory.solve(airfoil)
 # cl @ 5deg
 cl = 2*np.pi*(np.deg2rad(5) - airfoil.aL_0)
