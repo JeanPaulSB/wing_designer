@@ -20,15 +20,25 @@ through my email.
 
 ## Getting Started
 
-To start running the program is quite easy, remember that the structure as presented, airfoil is a python package that contains the corresponding tools.
+### Overall architecture
+The tools inside the project are organized as python packages, the availables until now are
+- Geometry (pretty self explanatory, it contains python object definitions for object such as airfoils, wings, and surfaces)
+- Models (it packages all the solvers that implements the mathematical and physical background required to estimate the aerodynamical performance of the specified geometry)
 
-_Once all the required libraries are installed_, go to "main.py" file.
+
+Geometry currently implements definitions for:
+- Airfoil
+- Custom Airfoil
+- Naca 
+> [!NOTE]  
+> In the future, more geometry definitions will be added.
+
 
 ### How to run it
 
 ```
-Inside the airfoil folder, run the file "ui.py".
-Then fill the required data and press the button "Plot".
+As the software architecture suggests, start by importing the required tools from its corresponding folder, i.e
+if you'd like to i
 ```
 
 **a few more methods will be added in future versions.**
