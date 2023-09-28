@@ -41,7 +41,7 @@ A finite wing inmersed in a flow vs An infinite wing in the some condition. It u
 > Infinite wing actually means that the span of the airfoil is 1.
 
 > [!NOTE]  
-> In the future, more geometry definitions will be added.
+> In the future, more geometry definitions and models will be added.
 
 
 ### How to run it
