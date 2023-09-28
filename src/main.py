@@ -1,4 +1,5 @@
 from airfoil.naca import Naca
+from models.tat import ThinAirfoilTheory
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -9,8 +10,12 @@ print(myfoil.thinAirfoilTheory(0))
 """
 from geometry import Naca
 
-myfoil = Naca("0012", chord=15, points=50)
-myfoil.addFlap(1, 0.80)
+myfoil = Naca("2412", chord=15, points=50)
+myfoil.addFlap(10, 0.80)
+
 myfoil.characterize()
 myfoil.compute()
-myfoil.plot()
+
+ThinAirfoilTheory.solve(myfoil)
+
+print(myfoil.aL_0 * 180 / np.pi)

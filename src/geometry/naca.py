@@ -4,7 +4,7 @@ from .airfoil import Airfoil
 from typing import Union
 
 from sympy.abc import x
-from sympy import Eq, Piecewise, lambdify, cos, symbols, integrate, simplify
+from sympy import Eq, Piecewise, lambdify
 
 
 class Naca(Airfoil):
@@ -18,9 +18,7 @@ class Naca(Airfoil):
         self.symmetrical = False
         self.flap_angle = 0
         self.flap_position = 0
-
-        self.characterize()
-        self.compute()
+        self.aL_0 = None
 
     """
     Sets the following parameters:
@@ -86,6 +84,7 @@ class Naca(Airfoil):
     """
     Returns the thickness distribution y(t) at a specific point
     """
+    # source: https://archive.aoe.vt.edu/mason/Mason_f/CAtxtAppA.pdf
 
     def thickness_distribution(self, x) -> float:
         term1 = 0.2969 * (np.sqrt(x / self.chord))
