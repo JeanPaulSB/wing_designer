@@ -88,7 +88,7 @@ cl = 2*np.pi*(np.deg2rad(5) - airfoil.aL_0)
 
 ```
 
-As expected, you can compare the two cl values and notice that there is actually a difference between them \Delta Cl = Cl_{clean} - Cl_{flapped}
+As expected, you can compare the two cl values and notice that there is actually a difference between them $\Delta Cl = Cl_{clean} - Cl_{flapped}$
 stating that the flap enhance the coefficient of lift that you can achieve for the same alpha. Try changing its deflection and see at which point it makes no sense of adding it.
 
 
