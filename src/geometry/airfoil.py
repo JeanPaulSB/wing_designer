@@ -5,6 +5,11 @@ import matplotlib.pyplot as plt
 
 
 class Airfoil(ABC):
+
+    """
+    yt(x)
+    """
+
     @abstractmethod
     def thickness_distribution(self, x):
         pass
