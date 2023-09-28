@@ -13,6 +13,8 @@ ThinAirfoilThoery Solver class for any airfoil, it computes the aL_0 and assigns
 class ThinAirfoilTheory:
     @staticmethod
     def solve(airfoil):
+        airfoil.characterize()
+        airfoil.compute()
         # creating the theta symbol
         theta = symbols("theta")
         # making the corresponding change of variable
