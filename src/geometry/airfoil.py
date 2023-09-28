@@ -1,12 +1,27 @@
 from abc import ABC, abstractmethod
 from typing import Union
 import numpy as np
+import matplotlib.pyplot as plt
 
 
 class Airfoil(ABC):
     @abstractmethod
     def thickness_distribution(self, x):
         pass
+
+    """
+    Plots the airfoil geometry
+    """
+
+    def plot(self):
+        plt.plot(self.x_coordinates[0], self.y_coordinates[0])
+        plt.plot(self.x_coordinates[0], self.y_coordinates[1])
+
+        try:
+            plt.plot(self.x_coordinates[0], self.yc)
+        except Exception:
+            pass
+        plt.show()
 
     """
     Adds a flap to the airfoil at a specified position
@@ -17,6 +32,10 @@ class Airfoil(ABC):
         self.flap_angle = np.deg2rad(angle)
         self.flap_position = position
         self.flapped = True
+
+    """
+    Export airfoil coordinates to a csv file
+    """
 
     def export(self, filename: str):
         if not filename:

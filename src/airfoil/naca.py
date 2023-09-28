@@ -58,7 +58,6 @@ class Naca:
         if self.family == 4:
             # generating x values
             self.x = np.linspace(0, self.chord, self.points)
-            self.set_equations()
             # computing thickness distribution
             self.yt = np.array(list(map(self.thickness_distribution, self.x)))
 

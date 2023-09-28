@@ -9,7 +9,8 @@ print(myfoil.thinAirfoilTheory(0))
 """
 from geometry import Naca
 
-
-myfoil = Naca("2412", chord=15, points=50)
-
-print(myfoil.addFlap(30, 80))
+myfoil = Naca("0012", chord=15, points=50)
+myfoil.addFlap(1, 0.80)
+myfoil.characterize()
+myfoil.compute()
+myfoil.plot()
