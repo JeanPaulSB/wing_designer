@@ -1,0 +1,1 @@
+from .tat import ThinAirfoilTheory
