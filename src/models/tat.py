@@ -4,6 +4,12 @@ from sympy.abc import x
 import numpy as np
 
 
+"""
+ThinAirfoilThoery Solver class for any airfoil, it computes the aL_0 and assigns it to the airfoil.
+
+"""
+
+
 class ThinAirfoilTheory:
     @staticmethod
     def solve(airfoil):
