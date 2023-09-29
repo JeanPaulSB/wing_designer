@@ -17,6 +17,7 @@ class ThinAirfoilTheory:
         airfoil.compute()
         # creating the theta symbol
         theta = symbols("theta")
+        airfoil.a0 = 2 * np.pi
         # making the corresponding change of variable
         if airfoil.symmetrical != True:
             airfoil.slope_sym = airfoil.slope_sym.subs(
