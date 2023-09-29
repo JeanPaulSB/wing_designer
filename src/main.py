@@ -1,15 +1,23 @@
 from geometry import Naca
-from models import ThinAirfoilTheory
+from models import ThinAirfoilTheory, LiftingLineTheory
 import matplotlib.pyplot as plt
 import numpy as np
+import sympy as sp
 
 """
 First example
 """
 
-myfoil = Naca("2412", chord=15, points=50)
-myfoil.addFlap(10, 0.80)
-myfoil.characterize()
-myfoil.compute()
-ThinAirfoilTheory.solve(myfoil)
-print(myfoil.aL_0 * 180 / np.pi)
+
+from geometry import Naca
+from models import ThinAirfoilTheory
+import numpy as np
+
+"""airfoil = Naca(
+    "2412", 15, 50
+)  # NACA 2412, 15m of chord and 50 points for its definition.
+airfoil.addFlap(20, 0.85)
+ThinAirfoilTheory.solve(airfoil)
+# cl @ 5deg
+cl = 2 * np.pi * (np.deg2rad(5) - airfoil.aL_0)
+"""
