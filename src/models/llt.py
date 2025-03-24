@@ -72,7 +72,7 @@ class LiftingLineTheory:
     
 
         # recomputing theta
-        print(V)
+
         theta = np.arccos((-2*y)/b)  
         strength = 2*b*V*(A[0] * np.sin(theta) + A[1]*np.sin(3*theta))
         normalized_strength = strength / strength[-1]
@@ -81,6 +81,9 @@ class LiftingLineTheory:
         c = c_root * (1 - 2 * ((lamda - 1) / b) * y)
         CL_w = 2 * strength / (V*c)
         qinf = 0.5*1.225*V**2
+
+        print(CL_w)
+        print(CDi)
 
         L = qinf*c*(CL_w/CL)
 
